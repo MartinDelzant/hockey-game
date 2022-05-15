@@ -9,6 +9,7 @@ namespace HockeyGame.UTest.Controllers
 {
     public class TeamControllerTest
     {
+        // TODO : This test should be done with different inputs & should be extended to other methods of the TeamController class
         [Test]
         public void GetTeamPerYear()
         {
@@ -17,33 +18,21 @@ namespace HockeyGame.UTest.Controllers
                 new Team {Coach = "coach", Id = 123, Year = 345}
             }.AsQueryable();
 
-            var mockedTeamDbSet = new Mock<DbSet<Team>>();
-            mockedTeamDbSet.As<IQueryable<Team>>().Setup(c => c.Provider).Returns(teams.Provider);
-            mockedTeamDbSet.As<IQueryable<Team>>().Setup(c => c.Expression).Returns(teams.Expression);
-            mockedTeamDbSet.As<IQueryable<Team>>().Setup(c => c.ElementType).Returns(teams.ElementType);
-            mockedTeamDbSet.As<IQueryable<Team>>().Setup(c => c.GetEnumerator()).Returns(teams.GetEnumerator());
+            var mockedTeamDbSet = MockDbSet(teams);
 
             var players = new[]
             {
                 new Player {IsCapitain = false, LastName = "foo", Name = "bar", Number = 10, Id = 99, Position = "goal"}
             }.AsQueryable();
 
-            var mockedPlayerDbSet = new Mock<DbSet<Player>>();
-            mockedPlayerDbSet.As<IQueryable<Player>>().Setup(c => c.Provider).Returns(players.Provider);
-            mockedPlayerDbSet.As<IQueryable<Player>>().Setup(c => c.Expression).Returns(players.Expression);
-            mockedPlayerDbSet.As<IQueryable<Player>>().Setup(c => c.ElementType).Returns(players.ElementType);
-            mockedPlayerDbSet.As<IQueryable<Player>>().Setup(c => c.GetEnumerator()).Returns(players.GetEnumerator());
+            var mockedPlayerDbSet = MockDbSet(players);
 
             var playerTeams = new[]
             {
                 new PlayerTeam { Id = 12, PlayerId = 99, TeamId = 123}
             }.AsQueryable();
 
-            var mockedPlayerTeamDbSet = new Mock<DbSet<PlayerTeam>>();
-            mockedPlayerTeamDbSet.As<IQueryable<PlayerTeam>>().Setup(c => c.Provider).Returns(playerTeams.Provider);
-            mockedPlayerTeamDbSet.As<IQueryable<PlayerTeam>>().Setup(c => c.Expression).Returns(playerTeams.Expression);
-            mockedPlayerTeamDbSet.As<IQueryable<PlayerTeam>>().Setup(c => c.ElementType).Returns(playerTeams.ElementType);
-            mockedPlayerTeamDbSet.As<IQueryable<PlayerTeam>>().Setup(c => c.GetEnumerator()).Returns(playerTeams.GetEnumerator());
+            var mockedPlayerTeamDbSet = MockDbSet(playerTeams);
 
             var mockedContext = new Mock<HockeyGameDbContext>();
             mockedContext.Setup(c => c.Team).Returns(mockedTeamDbSet.Object);
@@ -66,6 +55,17 @@ namespace HockeyGame.UTest.Controllers
             Assert.AreEqual("bar", player.Name);
             Assert.AreEqual(10, player.Number);
             Assert.AreEqual(99, player.Id);
+        }
+
+        private Mock<DbSet<T>> MockDbSet<T>(IQueryable<T> input) where T : class
+        {
+            var mockedTeamDbSet = new Mock<DbSet<T>>();
+            mockedTeamDbSet.As<IQueryable<T>>().Setup(c => c.Provider).Returns(input.Provider);
+            mockedTeamDbSet.As<IQueryable<T>>().Setup(c => c.Expression).Returns(input.Expression);
+            mockedTeamDbSet.As<IQueryable<T>>().Setup(c => c.ElementType).Returns(input.ElementType);
+            mockedTeamDbSet.As<IQueryable<T>>().Setup(c => c.GetEnumerator()).Returns(input.GetEnumerator());
+
+            return mockedTeamDbSet;
         }
     }
 }

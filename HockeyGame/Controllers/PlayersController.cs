@@ -1,5 +1,4 @@
-﻿using HockeyGame.Helper;
-using HockeyGame.Models;
+﻿using HockeyGame.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
