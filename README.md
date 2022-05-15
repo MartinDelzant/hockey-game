@@ -1,10 +1,13 @@
 # hockey-game
-
+- [Build & Run](#build-and-run)
 - [Endpoints](#endpoints)
   - [GET /api/team/{year}](#GET-/api/team/{year})
   - [POST /api/team/{Year}](#POST-/api/team/{year})
   - [PUT /api/player/captain/{ID}](#PUT-/api/player/captain/{ID})
 
+## Build and Run
+
+Recommended using Visual Studio 2022
 
 ## Endpoints
 
